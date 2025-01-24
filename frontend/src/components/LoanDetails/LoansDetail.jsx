@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import Navbar from "../Navbar/navbar";
+import Navbar from "../Navbar/Navbar";
 import axios from "axios";
 const LoansDetail = () => {
   const [searchParams] = useSearchParams();
