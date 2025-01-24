@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -8,7 +10,7 @@ function Login() {
   const [error, setError] = useState(null);
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-
+  const navigate =  useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Login attempted with:', { username, password });
@@ -30,7 +32,7 @@ function Login() {
 
     try {
       const response = await axios.post(
-        'http://localhost:9600/api/v1/authentication/login',
+        'http://172.16.3.228:9600/api/v1/authentication/login',
         {
           username,
           password,
@@ -44,15 +46,13 @@ function Login() {
       );
   
       if (response.status === 200) {
-        const { token } = response.data;
-        localStorage.setItem('token', token);
-  
-       
-  
-        // Redirect
-          window.location.href = '/add';
+        const token  = response.data.entity.token;
+        toast.success("login successful");
+          window.localStorage.setItem('token', token);
+          navigate("/add");
       } else {
         setError(response.data.message || 'Failed to login. Please check your credentials.');
+        toast.error("login  failed");
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -62,25 +62,30 @@ function Login() {
 
   return (
     <Container>
-      <Row className="justify-content-md-center mt-5">
-        <Col xs={12} md={6}>
-          <h2 className="text-center mb-4">Login</h2>
+      <Toaster/>
+      <Row className="justify-content-md-center align-items-center mt-5">
+        <Col xs={12} md={6} className='shadow-lg p-4 mt-5'>
+         <center>
+         <img src='/login.jpg' className='mb-3' style={{width:'150px', height:'150px'}}/>
+         </center>
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formBasicUsername">
-              <Form.Label>Username</Form.Label>
+            <Form.Group className="mb-5" controlId="formBasicUsername">
+              <Form.Label >Username</Form.Label>
               <Form.Control
+                className='py-3'
                 type="text"
-                placeholder="Enter username"
+                placeholder="Enter your username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
+            <Form.Group className="mb-5" controlId="formBasicPassword">
+              <Form.Label >Password</Form.Label>
               <Form.Control
                 type="password"
-                placeholder="Password"
+                className='py-3'
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
