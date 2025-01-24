@@ -84,14 +84,14 @@ public class LoanAppApplication {
             Set<Role> roles = new HashSet<>();
             Role adminRole = roleRepository.findByName("ROLE_ADMIN").orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             roles.add(adminRole);
-            user.setFirstName("Michael");
-            user.setLastName("Ndirangu");
-            user.setUsername("MNdirangu");
-            user.setEmail("mndirangu@emtechhouse.co.ke");
-            user.setMobile("0112209296");
+            user.setFirstName("John");
+            user.setLastName("Karanu");
+            user.setUsername("Karanu");
+            user.setEmail("karanujohn171@gmail.com");
+            user.setMobile("0702477708");
             user.setIsLoggedIn(0);
             user.setStatus("Active");
-            user.setPassword(passwordUtil.encode("M.ndirangu1"));
+            user.setPassword(passwordUtil.encode("1234"));
             repository.save(user);
 
             UserRole userRole = new UserRole();

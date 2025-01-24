@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -72,6 +69,14 @@ public class LoanService {
                 calendar.add(Calendar.MONTH, 1);
             } else if ("WEEKS".equalsIgnoreCase(loan.getFrequencyPeriod())) {
                 calendar.add(Calendar.WEEK_OF_YEAR, 1);
+            } else if ("YEARLY".equalsIgnoreCase(loan.getFrequencyPeriod())) {
+                calendar.add(Calendar.YEAR, 1);
+            } else if ("QUARTERLY".equalsIgnoreCase(loan.getFrequencyPeriod())) {
+                calendar.add(Calendar.MONTH, 3); // 3 months make a quarter
+            } else if ("HALFYEAR".equalsIgnoreCase(loan.getFrequencyPeriod())) {
+                calendar.add(Calendar.MONTH, 6); // 6 months make half a year
+            } else if ("DAILY".equalsIgnoreCase(loan.getFrequencyPeriod())) {
+                calendar.add(Calendar.DAY_OF_YEAR, 1);
             }
 
             loan.setNextRepaymentDate(calendar.getTime());
@@ -125,5 +130,38 @@ public class LoanService {
         return responses;
     }
 
+
+    public EntityResponse getLoanAndSchedule(Long sn) {
+        EntityResponse response = new EntityResponse();
+        try {
+            // Fetch loan by SN
+            Optional<Loan> loanOptional = loanRepository.findById(sn);
+            if (loanOptional.isEmpty()) {
+                response.setMessage("Loan not found for SN: " + sn);
+                response.setStatusCode(HttpStatus.NOT_FOUND.value());
+                response.setEntity(null);
+                return response;
+            }
+
+            Loan loan = loanOptional.get();
+
+            List<LoanSchedule> loanSchedules = loanScheduleRepository.findLoanAndSchedule(sn);
+
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("loan", loan);
+            responseData.put("loanSchedule", loanSchedules);
+
+            response.setMessage("Loan and schedule fetched successfully.");
+            response.setStatusCode(HttpStatus.OK.value());
+            response.setEntity(responseData);
+
+            log.info("Loan and schedule fetched successfully for SN: {}", sn);
+        } catch (Exception e) {
+            log.error("Error fetching loan and schedule for SN {}: {}", sn, e.getMessage(), e);
+            response.setMessage("Failed to fetch loan and schedule. Please try again.");
+            response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        }
+        return response;
+    }
 
 }

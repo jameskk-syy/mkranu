@@ -38,4 +38,16 @@ public class LoanController {
             return null;
         }
     }
+
+    @GetMapping("loan/{sn}")
+    public ResponseEntity<?> getLoanAndSchedule(@PathVariable Long sn) {
+        try {
+            EntityResponse response = loanService.getLoanAndSchedule(sn);
+            return ResponseEntity.status(response.getStatusCode()).body(response);
+        } catch (Exception e) {
+            log.error("Error fetching loan and schedule for sn {}: {}", sn, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while fetching the loan and its schedule.");
+        }
+    }
+
 }

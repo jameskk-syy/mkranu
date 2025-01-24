@@ -114,9 +114,9 @@ public class HttpConfigurer {
     CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowCredentials(true);
-        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost", "http://localhost:80","http://3.145.143.209:4370","http://52.15.152.26:9700","http://18.219.121.50"));
+        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost", "http://localhost:80","http://172.16.2.101:5173"));
 
-        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://localhost:4300","http://52.15.152.26:4362","http://52.15.152.26:4361","http://18.219.121.50","http://18..107.250:4362"));
+        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://172.16.2.101:5173"));
         corsConfig.setMaxAge(3600L);
         corsConfig.setAllowedMethods(Arrays.asList("GET","POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
         corsConfig.setAllowedHeaders(Arrays.asList("X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization"));

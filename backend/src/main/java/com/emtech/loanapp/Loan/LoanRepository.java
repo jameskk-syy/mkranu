@@ -11,4 +11,5 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
 
     @Query(value = "select * from loan", nativeQuery = true)
     List<Loan> findAllLoans();
+
 }
